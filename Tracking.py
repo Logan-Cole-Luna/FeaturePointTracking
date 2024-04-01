@@ -20,6 +20,7 @@ last_known_descriptors = {}
 last_known_keypoints = {}
 
 # Directory containing the image frames
+#frames_directory = "Jet2/img"
 frames_directory = "Jet1/img"
 
 # Get list of image files in sorted order
@@ -41,19 +42,21 @@ for frame_file in frame_files:
 
     # Resize frame for faster processing
     frame = cv2.resize(frame, (640, 480))
-    orb_display_frame = frame.copy()  # This is where we will draw all ORB keypoints
-    orb_display_frame_raw = frame.copy()  # This is where we will draw all ORB keypoints
-    original = frame.copy()  # This is where we will draw all ORB keypoints
+    YOLO_display_frame = frame.copy()  # This is where we will display YOLO
+    orb_display_frame_raw = frame.copy()  # This is where we will draw all Raw ORB keypoints
+    original = frame.copy()  # This is where we will compare ORB keypoints detected within bbox area to all Keypoints
 
     # Preprocess the frame for YOLOv8 and perform inference
     results = model(frame)
 
+    # Initial computing of keypoints in entire frame
     kp_all, des_all = orb.detectAndCompute(original, None)
 
     # Dictionary to keep track of current frame's descriptors
     current_descriptors = {}
     current_keypoints = {}
 
+    # To keep track of if object is detected
     detection_status = False
 
     # Check if results is a list and handle accordingly
@@ -86,13 +89,16 @@ for frame_file in frame_files:
                 else:
                     detection_status = True
 
-
+                # Should this be here or within loop?
                 label = f"{result.names[cls_id]}: {conf:.2f}"
 
                 if (conf > confidence_threshold):
                     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
                     # Detect and store ORB keypoints and descriptors for the current object
+
+                    cv2.rectangle(YOLO_display_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.putText(YOLO_display_frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
                     # Label keypoints within the bounding box
                     kp_within_box = []
@@ -126,7 +132,7 @@ for frame_file in frame_files:
                 print("uh")
 
                 for match in matches:
-                    print("MATCH!!")
+                    # print("MATCH!!")
                     matched_kp = kp_current[match.trainIdx]  # Get the matched keypoint object
                     matched_des = des_current[match.trainIdx]  # Get the matched descriptor
 
@@ -146,18 +152,20 @@ for frame_file in frame_files:
                     current_descriptors[label] = np.array(matched_dess)
 
 
-    # Update last known descriptors and keypoints
+    # Update last known descriptors and keypoints, these will be matched in next frame if no object is detected,
+    # they also carry the labels attached to the current_descriptors
     last_known_descriptors = current_descriptors
     last_known_keypoints = current_keypoints
 
+    # This is for raw display of points
     keypoints_all, _ = orb.detectAndCompute(orb_display_frame_raw, None)
     for keypoint in keypoints_all:
         x, y = keypoint.pt
         cv2.circle(orb_display_frame_raw, (int(x), int(y)), 3, (255, 0, 0), -1)  # Draw all keypoints as red dots
 
-    cv2.imshow('YOLOv8 + ORB Tracking', frame)
+    cv2.imshow('YOLO Output', YOLO_display_frame)  # Display the frame with all ORB keypoints
     cv2.imshow('orb_display_frame_raw', orb_display_frame_raw)
-    cv2.imshow('ORB Keypoints', orb_display_frame)  # Display the frame with all ORB keypoints
+    cv2.imshow('YOLOv8 + ORB Tracking', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
