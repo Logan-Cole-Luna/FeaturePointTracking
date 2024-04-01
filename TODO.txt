@@ -1,0 +1,21 @@
+'''
+TODO
+
+Implement a system that, when the tracked points are detected within a bounding box after time T, the object
+within the bbox will be assigned the label that the points detected within the box already have
+
+EX:
+Plane 1 is lost, redetected later as plane 3, plane 1 points are still attached, so plane 3 is renamed plane 1
+
+
+
+TODO
+
+Create a confidence metric where if points within a specified radius R of a track point are matched near it after X
+frames, they will receive the same label as that point
+
+EX:
+Plane 1 has lost detection and has switched to points and Point 1 is tracked, after X frames Point 2 which was not
+ originally detected with Plane 1 has remained withing radius R of Point 1, then Point 2 is given the same label as
+ Point 1 (Plane 1)
+
