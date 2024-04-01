@@ -1,3 +1,13 @@
+'''
+TODO
+
+Implement a system that, when the tracked points are detected within a bounding box after x time, the object
+within the bbox will be assigned the label that the points detected within the box already have
+
+EX:
+Plane 1 is lost, redetected later as plane 3, plane 1 points are still attached, so plane 3 is renamed plane 1
+
+'''
 import cv2
 from ultralytics import YOLO  # Import YOLO from ultralytics
 import torch
