@@ -1,4 +1,3 @@
-'''
 TODO
 
 Implement a system that, when the tracked points are detected within a bounding box after time T, the object
@@ -7,15 +6,45 @@ within the bbox will be assigned the label that the points detected within the b
 EX:
 Plane 1 is lost, redetected later as plane 3, plane 1 points are still attached, so plane 3 is renamed plane 1
 
-
+Purpose:
+Ensure that there will not be an ever increasing number of objects and points not connecting to object they came from
 
 TODO
 
 Create a confidence metric where if points within a specified radius R of a track point are matched near it after X
 frames, they will receive the same label as that point
+Treat new points differently, be careful not to clone plane
 
 EX:
 Plane 1 has lost detection and has switched to points and Point 1 is tracked, after X frames Point 2 which was not
  originally detected with Plane 1 has remained withing radius R of Point 1, then Point 2 is given the same label as
  Point 1 (Plane 1)
 
+Purpose:
+Prevent points from dying out after a long period of no detections
+
+TODO
+
+Handling of multiple objects
+Ideas:
+- Implement idea #1 first along with each object having it's own points, should asist with overall tracking
+- For loop that iterates through every object in frame and attaches points to labels & matches points
+
+TODO
+
+If points of same object such as plane_1 go x distance from one another, then points of lower cluster density will be removed
+
+TODO
+
+Create of confidence prediction that utilizes YOLO and Point Location to draw bounding box
+
+TODO
+
+Integration of Kalman Filter, the Kalman filter will predict the object's
+future state (e.g., position and velocity) based on its current state and past movements.
+
+Would address the overlapping objects problem
+
+TODO
+
+Store all data, what tracked, when detected, when lost, when redetected
