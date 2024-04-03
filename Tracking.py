@@ -13,6 +13,7 @@ model = YOLO('yolov8n.pt')
 
 # Initialize ORB
 orb = cv2.ORB_create()
+#orb = cv2.ORB_create(scoreType=cv2.ORB_HAMMING)
 bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
 # Placeholder for the last known descriptors and keypoints for tracked objects
