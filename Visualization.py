@@ -30,21 +30,45 @@ plt.ylabel('Frequency')
 plt.grid(True)
 plt.show()
 
+import os
+import numpy as np
+import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-# Example: Load the first descriptor file for illustration
-# Adjust the path as necessary to point to an actual descriptor file
-descriptor = np.load('descriptors_folder/first_descriptor.npy')
+# Path to your descriptors folder
+descriptors_folder = 'descriptors_folder'
 
+# Get a list of all descriptor files
+descriptor_files = os.listdir(descriptors_folder)
+
+# Initialize lists to store the features
+features = []
+
+# Loop over the descriptor files and append the features
+for file in descriptor_files:
+    descriptor_path = os.path.join(descriptors_folder, file)
+    descriptor = np.load(descriptor_path)
+    features.append(descriptor[0, :3])  # Assuming each descriptor has at least 3 features
+
+# Convert the list of features to a numpy array for easier slicing
+features = np.array(features)
+
+# Now we'll plot these features in a 3D scatter plot
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111, projection='3d')
 
-# Taking only the first three features of each descriptor for plotting
-ax.scatter(descriptor[:, 0], descriptor[:, 1], descriptor[:, 2])
+# Scatter plot for the first three features, color-coded by the index which could represent time or frame number
+scatter = ax.scatter(features[:, 0], features[:, 1], features[:, 2], c=range(len(features)), cmap='viridis')
 
+# Creating a colorbar to represent the frame numbers or index
+cbar = plt.colorbar(scatter, shrink=0.5, aspect=5)
+cbar.set_label('Index/Frame Number')
+
+# Labeling axes
 ax.set_xlabel('Feature 1')
 ax.set_ylabel('Feature 2')
 ax.set_zlabel('Feature 3')
-plt.title('3D Scatter Plot of Descriptor Features')
 
+plt.title('3D Scatter Plot of First Three Descriptor Features')
 plt.show()
+
