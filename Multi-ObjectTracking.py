@@ -27,8 +27,8 @@ last_known_descriptors = {}
 last_known_keypoints = {}
 
 # Directory containing the image frames
-frames_directory = "Jet1/img"
-#frames_directory = "Jet2/img"
+#frames_directory = "Jet1/img"
+frames_directory = "Jet2/img"
 
 # Get list of image files in sorted order
 frame_files = sorted([f for f in os.listdir(frames_directory) if f.endswith('.jpg')])

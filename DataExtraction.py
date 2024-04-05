@@ -22,15 +22,16 @@ frames_directory = "Jet2/img"  # Update this path to your directory containing t
 # Get list of image files in sorted order
 frame_files = sorted([f for f in os.listdir(frames_directory) if f.endswith('.jpg')])
 
-# Real-time speed simulation: 30 FPS
-fps = 30
-frame_duration = 1.0 / fps
-
 # Data collection list
 data_points = []
+keypoint_matches = []
+
+# Ensure the directory exists for descriptor files
+descriptors_folder = "descriptors_folder"
+os.makedirs(descriptors_folder, exist_ok=True)
 
 # Process each frame in the directory
-for frame_file in frame_files:
+for frame_idx, frame_file in enumerate(frame_files):
     frame_path = os.path.join(frames_directory, frame_file)
     frame = cv2.imread(frame_path)
 
@@ -48,10 +49,6 @@ for frame_file in frame_files:
     current_descriptors = {}
     current_keypoints = {}
 
-    # To keep track of if object is detected
-    detection_status = False
-
-    # Process results
     if isinstance(results, list) and len(results) > 0:
         for result in results:
             if hasattr(result, 'boxes'):
@@ -74,13 +71,10 @@ for frame_file in frame_files:
 
                     # Check for detection confidence
                     if conf > confidence_threshold:
-                        detection_status = True
-
-                        # Generate label for the detected object
-                        label = f"{result.names[cls_id]}: {conf:.2f}"
+                        label = f"{model.names[cls_id]}: {conf:.2f}"
 
                         # Unique identifier for the descriptor file
-                        descriptor_file_name = f"descriptors_{frame_file}_{result.names[cls_id]}_{conf:.2f}.npy"
+                        descriptor_file_name = f"descriptors_{frame_file}_{model.names[cls_id]}_{conf:.2f}.npy"
 
                         # Process keypoints within the bounding box
                         kp_within_box = []
@@ -95,27 +89,40 @@ for frame_file in frame_files:
                             current_descriptors[label] = np.array(des_within_box)
 
                             # Save descriptors to a NumPy file for each detected object
-                            np.save(os.path.join("descriptors_folder", descriptor_file_name), np.array(des_within_box))
+                            np.save(os.path.join(descriptors_folder, descriptor_file_name), np.array(des_within_box))
 
                             data_points.append({
                                 'Frame': frame_file,
-                                'Class': result.names[cls_id],
+                                'Class': model.names[cls_id],
                                 'Confidence': conf,
                                 'BoundingBox': (x1, y1, x2, y2),
                                 'Keypoints': len(kp_within_box),
                                 'DescriptorFile': descriptor_file_name
                             })
 
+                            # Save additional information for each keypoint detected within the YOLO bounding box
+                            for kp_idx, (kp, des) in enumerate(zip(kp_within_box, des_within_box)):
+                                kp_match_data = {
+                                    'Frame': frame_file,
+                                    'Class': model.names[cls_id],
+                                    'Keypoint_ID': kp_idx,
+                                    'Keypoint_Position': (kp.pt[0], kp.pt[1]),
+                                    'Descriptor': des,
+                                    'Confidence': conf
+                                }
+                                keypoint_matches.append(kp_match_data)
+
     # Update last known descriptors and keypoints
     last_known_descriptors = current_descriptors
     last_known_keypoints = current_keypoints
 
-# Ensure the directory exists for descriptor files
-os.makedirs("descriptors_folder", exist_ok=True)
-
 # Exporting to Excel
 df = pd.DataFrame(data_points)
 df.to_excel('tracking_results_with_descriptors.xlsx', index=False)
+
+# Export keypoint match data to a separate Excel file
+kp_df = pd.DataFrame(keypoint_matches)
+kp_df.to_excel('keypoint_tracking_results.xlsx', index=False)
 
 # Make sure to close any open windows if you're using cv2.imshow() to display the frames
 cv2.destroyAllWindows()
