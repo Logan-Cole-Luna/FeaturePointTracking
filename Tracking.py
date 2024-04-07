@@ -25,7 +25,7 @@ last_known_keypoints = {}
 #frames_directory = "Drone1/img"
 #frames_directory = "DriftCar1/img"
 #frames_directory = "MotorcycleChase/img"
-frames_directory = "Jet1/img"
+frames_directory = "Jet2/img"
 #frames_directory = "Jet2/img"
 
 # Get list of image files in sorted order
