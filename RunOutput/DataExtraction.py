@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 # Load YOLO model
-model = YOLO('yolov8n.pt')  # Ensure you have this model downloaded or change the path accordingly
+model = YOLO('../Weights/yolov8n.pt')  # Ensure you have this model downloaded or change the path accordingly
 
 # Initialize ORB
 orb = cv2.ORB_create()

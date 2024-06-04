@@ -36,16 +36,6 @@ and final accuracy based on the processed frames.
 Limitations and Future Work:
 - The current implementation is designed for single-object tracking.
 - Future work includes supporting multi-object tracking and integrating more advanced tracking algorithms.
-
-Acknowledgments
-We would like to thank the creators of YOLO (You Only Look Once) and ORB (Oriented FAST and Rotated BRIEF)
-for providing the foundational tools that made this research possible.
-YOLO is developed by Joseph Redmon et al. and is available under the MIT License.
-The code and further details can be found at https://github.com/AlexeyAB/darknet.
-ORB is developed by Ethan Rublee et al. and is available under the BSD License.
-The original paper can be referenced as "ORB: an efficient alternative to SIFT or SURF" by Rublee et al. (2011),
-and the implementation can be found in OpenCV at https://github.com/opencv/opencv.
-We have adhered to the licenses and terms of use for both YOLO and ORB in this research.
 """
 
 import cv2
@@ -55,7 +45,7 @@ import os
 import torch
 
 # Load YOLO model
-model = YOLO('yolov8n.pt')
+model = YOLO('Weights/yolov8n.pt')
 
 # Initialize ORB
 orb = cv2.ORB_create()

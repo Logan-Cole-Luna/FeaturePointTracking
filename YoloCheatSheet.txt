@@ -1,0 +1,154 @@
+Combined Train:
+
+yolo detect train data=CombinedDataset/data.yaml model=yolov8n.pt epochs=300 imgsz=640 batch=16 amp=true mosaic=1.0 auto_augment=randaugment hsv_h=0.015 hsv_s=0.7 hsv_v=0.4 degrees=0.0 translate=0.1 scale=0.5 shear=0.0 perspective=0.0 flipud=0.0 fliplr=0.5 cos_lr=true warmup_epochs=3.0 warmup_momentum=0.8 warmup_bias_lr=0.1 lr0=0.01 lrf=0.01 momentum=0.937 weight_decay=0.0005 project=YoloV8CombinedAircraft name=Attempt1 plots=True visualize=true save_txt=true pretrained=true workers=8
+
+Military Train:
+yolo detect train data="B:\Datasets\militaryAircraft.v9i.yolov8\data.yaml" model=yolov8n.pt epochs=150 imgsz=640 batch=16 amp=true mosaic=1.0 auto_augment=randaugment hsv_h=0.015 hsv_s=0.7 hsv_v=0.4 degrees=0.0 translate=0.1 scale=0.5 shear=0.0 perspective=0.0 flipud=0.0 fliplr=0.5 cos_lr=true warmup_epochs=3.0 warmup_momentum=0.8 warmup_bias_lr=0.1 lr0=0.01 lrf=0.01 momentum=0.937 weight_decay=0.0005 project=YoloV8MilitaryAircraft name=Attempt1 plots=True visualize=true save_txt=true pretrained=true workers=8
+
+"C:\Users\Logan\OneDrive\Past Documents\Datasets\militaryAircraft.v9i.yolov8"
+
+Script Broken by:
+multi_scale=true
+
+rect=true # prevents shuffle
+
+Onnx Export:
+yolo export model=path/to/best.pt format=onnx  # export custom trained model
+
+
+Explanation of changes:
+
+batch=16: Specifies the batch size.
+amp=true: Enables Automatic Mixed Precision for faster training on supported GPUs.
+Data Augmentation Parameters:
+mosaic=1.0, auto_augment=randaugment, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4: Enhanced data augmentation for better generalization.
+degrees=0.0, translate=0.1, scale=0.5, shear=0.0, perspective=0.0, flipud=0.0, fliplr=0.5: More data augmentation settings.
+multi_scale=true: Enables training on various image sizes.
+rect=true: Allows for rectangular training, optimizing the training process.
+Learning Rate and Scheduler Parameters:
+cos_lr=true: Enables cosine annealing for the learning rate.
+warmup_epochs=3.0, warmup_momentum=0.8, warmup_bias_lr=0.1: Warmup settings.
+lr0=0.01, lrf=0.01, momentum=0.937, weight_decay=0.0005: Learning rate and optimization settings.
+pretrained=true: Starts training from a pretrained model.
+workers=8: Number of workers for data loading.
+
+
+
+General Training Configuration
+task: The high-level task to perform (e.g., detect).
+mode: Operation mode (e.g., train).
+model: Model architecture or path to a model file.
+data: Path to the dataset configuration file.
+epochs: Number of training epochs.
+time: (Reserved for future use) Training time limit.
+patience: Early stopping patience.
+batch: Batch size for training.
+imgsz: Image size (square images of size imgsz x imgsz).
+save: Whether to save model checkpoints.
+save_period: Interval for saving model checkpoints.
+cache: Whether to cache images to RAM or disk for faster training.
+device: Device to use for training (cpu, cuda, or specific GPU index).
+workers: Number of workers for data loading.
+project: Project name for organizing runs.
+name: Name of the training run.
+exist_ok: Whether overwriting existing runs is allowed.
+Model Configuration and Augmentation
+pretrained: Start from a pretrained model.
+optimizer: Optimization algorithm (auto selects automatically).
+verbose: Enable verbose logging.
+seed: Random seed for reproducibility.
+deterministic: Ensure deterministic training.
+single_cls: Treat the problem as single-class detection.
+rect: Use rectangular training (speeds up training).
+cos_lr: Use cosine learning rate scheduler.
+close_mosaic: Epoch to stop applying mosaic augmentation.
+resume: Resume training from the last checkpoint.
+amp: Use Automatic Mixed Precision for faster training.
+fraction: (Reserved for future use) Fraction of dataset to use.
+profile: Enable profiling to analyze performance and bottlenecks.
+freeze: Layers to freeze during training.
+multi_scale: Enable multi-scale training.
+overlap_mask: Apply overlap masking in data augmentation.
+mask_ratio: Mask ratio for overlap masking.
+dropout: Dropout rate.
+val: Perform validation during training.
+split: Data split to use for validation.
+save_json: Save results in JSON format (for COCO dataset).
+save_hybrid: (Reserved for future use).
+Evaluation and Inference
+conf: Confidence threshold for predictions.
+iou: Intersection-over-Union threshold for NMS.
+max_det: Maximum detections per image.
+half: Use half precision for inference (FP16).
+dnn: Use OpenCV DNN module for inference.
+plots: Generate and save training plots.
+source: Source data for prediction or validation.
+vid_stride: Frame stride for video prediction.
+stream_buffer: (Reserved for future use).
+visualize: Visualize model predictions.
+augment: Apply data augmentation during inference.
+agnostic_nms: Apply class-agnostic NMS.
+classes: Specify classes to detect.
+retina_masks: (Reserved for future use).
+embed: (Reserved for future use).
+show: Display predictions in real-time.
+save_frames: Save video frames with predictions.
+save_txt: Save predictions in TXT format.
+save_conf: Include confidence scores in saved predictions.
+save_crop: Save cropped prediction regions.
+show_labels: Display labels in visualizations.
+show_conf: Display confidence scores in visualizations.
+show_boxes: Display bounding boxes in visualizations.
+line_width: Line width for drawing bounding boxes.
+format: Export format for the model (e.g., torchscript).
+keras: Export model to Keras format.
+optimize: Optimize model for deployment.
+int8: Quantize model to INT8.
+dynamic: Use dynamic axes in model export.
+simplify: Simplify model graph.
+opset: ONNX opset version for export.
+workspace: Maximum workspace size for TensorRT conversion.
+nms: Apply Non-Maximum Suppression during inference.
+Hyperparameters and Data Augmentation
+lr0: Initial learning rate.
+lrf: Final learning rate for cosine scheduler.
+momentum: Momentum for SGD optimizer.
+weight_decay: Weight decay (L2 penalty).
+warmup_epochs: Number of warmup epochs.
+warmup_momentum: Momentum during warmup.
+warmup_bias_lr: Learning rate for bias parameters during warmup.
+box: Box loss gain.
+cls: Classification loss gain.
+dfl: Distribution Focal Loss gain.
+pose: Pose loss gain (for pose estimation tasks).
+kobj: Objectness loss gain.
+label_smoothing: Label smoothing value.
+nbs: Nominal batch size for scaling the learning rate.
+hsv_h: Hue adjustment in HSV space.
+hsv_s: Saturation adjustment in HSV space.
+hsv_v: Value (brightness) adjustment in HSV space.
+degrees: Rotation range for random
+
+
+Training Values:
+box_loss: The loss related to bounding box predictions.
+It measures how well the model is doing at predicting the location and size of the boxes around the objects.
+
+cls_loss: The classification loss.
+This indicates how well the model is at classifying the objects within the boxes.
+
+dfl_loss: The distribution focal loss, used in some YOLO versions to enhance accuracy by focusing more on hard to classify instances.
+
+Instances: The number of object instances in the images that were processed during this epoch.
+
+Size: The input size of images during training, which is 640 pixels. This can vary as YOLO supports multi-scale training.
+
+Box(P): Precision for bounding box predictions.
+
+R: Recall for the objects detected.
+
+mAP50: Mean Average Precision at IoU (Intersection over Union) threshold of 0.5.
+It's a common metric for object detection, representing model accuracy.
+
+mAP50-95: Mean Average Precision averaged over multiple IoU thresholds from 0.5 to 0.95 (with a step size of 0.05).
+This is a more stringent metric, indicating robust performance across a range of IoU thresholds.

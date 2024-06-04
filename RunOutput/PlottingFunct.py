@@ -12,7 +12,7 @@ import seaborn as sns
 sns.set(style="whitegrid", context="talk")
 
 # Load YOLO model
-model = YOLO('yolov8n.pt')
+model = YOLO('../Weights/yolov8n.pt')
 
 # Initialize ORB
 orb = cv2.ORB_create()
